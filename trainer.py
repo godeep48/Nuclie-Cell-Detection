@@ -8,6 +8,7 @@ import torch
 
 import numpy as np
 from PIL import Image
+import yaml
 
 from torch.utils.data import Dataset, DataLoader, random_split
 
@@ -17,19 +18,10 @@ import torch.nn.functional as F
 from PIL import Image
 from torch import nn
 import os
-
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-
-config_dict = {
-	"train_dir": './data/',
-	"split_ratio":0.3,
-	"batch_size":10,
-	"learning_rate": 1e-3,
-	"checkpoint_path": '/model/chkpoint_',
-	"bestmodel_path": '/model/bestmodel.pt',
-	"epochs": 100
-}
+with open(r'configs/config.yaml') as file:
+    config_dict = yaml.safe_load(file)
 
 
 
@@ -37,13 +29,12 @@ config_dict = {
 TRAIN_PATH = config_dict["train_dir"]
 
 #Load dataset from the train directory
-train_dataset = LoadDataSet(TRAIN_PATH, transform=get_train_transform())
+train_dataset = LoadDataSet(TRAIN_PATH, transform=get_train_transform(config_dict["IMAGE_SIZE"]))
 
 ## Split train and validation set.
 split_ratio = config_dict["split_ratio"]
 train_size=int(np.round(train_dataset.__len__()*(1 - split_ratio),0))
 valid_size=int(np.round(train_dataset.__len__()*split_ratio,0))
-print(train_size, valid_size)
 train_data, valid_data = random_split(train_dataset, [train_size, valid_size]) #2491, 200
 
 #DataLoader for train dataset

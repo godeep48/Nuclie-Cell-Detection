@@ -6,16 +6,17 @@ from skimage import io, transform
 from torch.utils.data import Dataset
 
 
+
 def preprocess_mask(mask):
     #mask = np.array(mask).astype(np.float32)
     mask[mask != 255.0] = 0.0
     mask[mask==255]=1.0
     return mask
 
-def get_train_transform():
+def get_train_transform(image_size):
    return A.Compose(
        [
-        A.Resize(256, 256),
+        A.Resize(image_size, image_size),
         A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
         A.HorizontalFlip(p=0.25),
         A.VerticalFlip(p=0.25),

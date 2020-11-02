@@ -1,0 +1,9 @@
+IMAGE_SIZE: 256
+train_dir: './data/'
+split_ratio: 0.3
+batch_size: 10
+learning_rate: 0.01
+checkpoint_path: '/model/chkpoint_'
+bestmodel_path: '/model/bestmodel.pt'
+epochs: 100
+RESNET: True
